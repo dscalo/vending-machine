@@ -17,6 +17,18 @@ type Snacks struct {
 	Snacks []Snack `json:"snacks"`
 }
 
+func (s *Snacks) longestName() int {
+	length := 0
+
+	for _, snack := range s.Snacks {
+		nameLength := len(snack.Name)
+		if  nameLength > length {
+			length = nameLength
+		}
+	}
+
+	return length
+}
 
 
 func GetSnacks(path string) (*Snacks, error) {
