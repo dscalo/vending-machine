@@ -15,7 +15,7 @@ func getSelection(choice string, snacks *Snacks) int {
 		return -1
 	}
 
-	if num >= len(snacks.Snacks) || num <= 0 {
+	if num > len(snacks.Snacks) || num <= 0 {
 		return -1
 	}
 

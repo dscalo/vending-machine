@@ -60,7 +60,7 @@ func displaySnacks(snacks *Snacks) {
 }
 
 func displaySnack(snack *Snack) {
-	fmt.Println(snack.Name)
+	fmt.Printf("%s: $%.2f\n",snack.Name, snack.Price)
 	fmt.Println(snack.Desc)
 }
 
