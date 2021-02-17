@@ -54,7 +54,7 @@ func processSelection(state *State, action string)  {
 						state.Screen = "CONFORMATION"
 					}
 				case "c":
-					state.Screen = "MAIN_MENU"
+					state.Screen = "MAIN"
 					state.Selection = -1
 				case "q":
 					state.Screen = "QUIT"
