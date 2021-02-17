@@ -2,73 +2,88 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
 
-func padString(s string, ln int) string {
-
-	if len(s) >= ln {
-		return s
-	}
-
-	for  len(s) < ln {
-		s += " "
-	}
-
-	return s
-}
-
-func displaySnacks(snacks *Snacks) {
-	pad := snacks.longestName() + 2
-
-	for idx,snack := range snacks.Snacks {
-		// make the snacks 3 to a line
-		if idx > 0 && idx % 3 == 0 {
-			fmt.Print("\n")
-		}
-		price := fmt.Sprintf("%.2f", snack.Price)
-		if snack.Qty <= 0 {
-			price = " OUT"
-		}
-		fmt.Printf("%d: %s $%s\t", idx+1,padString(snack.Name, pad), price)
-	}
-	fmt.Print("\n")
-}
-
-func validateSelection(choice string, snacks *Snacks) bool {
+func getSelection(choice string, snacks *Snacks) int {
 	num, err := strconv.Atoi(choice)
 
 	if err != nil {
-		fmt.Println("NOT A NUMBER!!!!!")
-		return false
+		return -1
 	}
 
 	if num >= len(snacks.Snacks) || num <= 0 {
-		return false
+		return -1
 	}
 
 	if snacks.Snacks[num-1].Qty <= 0 {
-		return false
+		return -1
 	}
 
-	return true
+	return num - 1
 
-}
-
-func printGreeting() {
-	fmt.Println("Welcome to Lulu's Virtual Vending Machine!")
-	fmt.Println("Choose a snack, press d to add money,  or press Q to exit")
 }
 
 func getUserInput(reader *bufio.Reader) string {
-	fmt.Print("Make a selection: ")
 	choice, _ := reader.ReadString('\n')
 	choice = strings.Replace(choice, "\n", "", -1)
-	return choice
+	return strings.ToLower(choice)
+}
+
+
+func processSelection(state *State, action string)  {
+	switch state.Screen {
+		case "MAIN":
+			if action == "q" {
+				state.Screen = "QUIT"
+			}
+			state.Selection = getSelection(action, state.Snacks)
+			if state.Selection == -1 {
+				return
+			}
+			state.Screen = "SNACK"
+
+		case "SNACK":
+			switch action {
+				case "d":
+					state.Balance += 1.00
+					if state.Balance >= state.Snacks.Snacks[state.Selection].Price {
+						state.Screen = "CONFORMATION"
+					}
+				case "c":
+					state.Screen = "MAIN_MENU"
+					state.Selection = -1
+				case "q":
+					state.Screen = "QUIT"
+			}
+
+		case "CONFORMATION":
+			switch action {
+				case "c":
+					state.Screen = "MAIN"
+					state.Selection = -1
+				case "a":
+					state.Screen = "DISPENSE"
+					state.Balance -= state.Snacks.Snacks[state.Selection].Price
+				case "q":
+					state.Screen = "QUIT"
+			}
+		case "DISPENSE":
+			switch action {
+				case "m":
+					state.Screen = "MAIN"
+					state.Selection = -1
+					state.Balance = 0
+				case "q":
+					state.Screen = "QUIT"
+			}
+	default:
+		panic("Unknown screen "+ state.Screen)
+		}
+
 }
 
 func main() {
@@ -80,30 +95,26 @@ func main() {
 	}
 
 	reader := bufio.NewReader(os.Stdin)
-	printGreeting()
-	for {
+	state := newState("MAIN", 0.00, snacks)
 
-		displaySnacks(snacks)
+	for state.Screen != "QUIT" {
+		choice := ""
+		switch state.Screen {
+		case "MAIN" :
+			MainScreen(state)
+			choice = getUserInput(reader)
+		case "SNACK":
+			fallthrough
+		case "CONFORMATION":
+			SnackScreen(state)
+			choice = getUserInput(reader)
+		case "DISPENSE":
+			DispenseScreen(state)
+			choice = getUserInput(reader)
 
-		choice := getUserInput(reader)
-
-		if choice == "q" || choice == "Q" {
-			fmt.Println("Powering down, have a nice day")
-			break
 		}
-
-		valid := validateSelection(choice, snacks)
-
-		if valid {
-			fmt.Println("Valid")
-		} else {
-			fmt.Println("Invalid selection, chose an available snack or press q to exit")
-			continue
-		}
+		processSelection(state, choice)
 	}
-
-
-
 }
 
 

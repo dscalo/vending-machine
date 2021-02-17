@@ -1,0 +1,41 @@
+{
+  "snacks": [
+    {
+      "name": "Yum Yum Bar",
+      "price": 0.75,
+      "qty": 10,
+      "desc": "Super yummy and good for you too!"
+    },
+    {
+      "name": "Go Nuts Bar",
+      "price": 0.75,
+      "qty": 10,
+      "desc": "Go nuts for longer with 50x the sugar of a normal candy bar."
+    },
+    {
+      "name": "Pizza Crisps",
+      "price": 0.65,
+      "qty": 15,
+      "desc": "Totally all natural, made using non GMO free range pizzas"
+    },
+    {
+      "name": "Fried Bird Feet",
+      "price": 1.50,
+      "qty": 5,
+      "desc": "Made from feet, its a real treat!"
+    },
+    {
+      "name": "Mini Donuts",
+      "price": 1.25,
+      "qty": 7,
+      "desc": "You'll need to hit the treadmill for at least an hour to work these bad boys off"
+    },
+    {
+      "name": "Jump'in Jacks Jerky",
+      "price": 2.25,
+      "qty": 3,
+      "desc": "Hot damn this is some gooooood jerky!"
+    }
+
+  ]
+}
