@@ -38,10 +38,6 @@ func padString(s string, ln int) string {
 	return s
 }
 
-
-
-
-
 func displaySnacks(snacks *Snacks) {
 	pad := snacks.longestName() + 2
 

@@ -98,21 +98,18 @@ func main() {
 	state := newState("MAIN", 0.00, snacks)
 
 	for state.Screen != "QUIT" {
-		choice := ""
 		switch state.Screen {
 		case "MAIN" :
 			MainScreen(state)
-			choice = getUserInput(reader)
 		case "SNACK":
 			fallthrough
 		case "CONFORMATION":
 			SnackScreen(state)
-			choice = getUserInput(reader)
 		case "DISPENSE":
 			DispenseScreen(state)
-			choice = getUserInput(reader)
-
 		}
+
+		choice := getUserInput(reader)
 		processSelection(state, choice)
 	}
 }
